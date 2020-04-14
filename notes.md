@@ -22,3 +22,8 @@ But I didnt get this. Then I asked my PC about this.
 He told that updated version of "Werkzeug" is not working. SO I uninstalled it and downloaded same on e but with version 0.16.0 which is working.
 Then I used command flask run and I got a url which resulted to show the required output "Project 1: TODO" !
 Time taken for this total task : 45 minutes
+
+Task-3: To develop an API key in Goodreads as we have to use their API
+I created a goodreads account and gave details to develop an API key
+I gave that key in given python program to check the python program which displays the book details.
+The output I got is the book details based on key and isbn
