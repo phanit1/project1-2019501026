@@ -1,6 +1,6 @@
 Task-1: To set up a PostgreSQL database which can be hosted.
 
-I firstly navigated to herolu website(www.heroku.com).
+I firstly navigated to heroku website(www.heroku.com).
 I created a account as I have no account in it.
 I also created new application named sapprojectone2019501026
 I had added Heroku Postgres addon which is required to this project.
@@ -27,3 +27,4 @@ Task-3: To develop an API key in Goodreads as we have to use their API
 I created a goodreads account and gave details to develop an API key
 I gave that key in given python program to check the python program which displays the book details.
 The output I got is the book details based on key and isbn
+Time taken for this total task : 20 minutes
