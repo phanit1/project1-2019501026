@@ -14,3 +14,10 @@ Task 2: Making HTML Page connect to server
  I also got to know how to change the linking format of css files in html as we are using flask
  I referred tutorialspoint and NGLMS video to know about render template.
  Time elasped for this task : 30 minutes
+
+ Task 3: Displaying the data submitted through Register Button using GET, POST methods
+ Firstly, I took more time to complete this task as I donot know more about GET,POST methods
+ It took more time to understand those methods and to link to this project
+ Then I learned GET and POST methods and took refernce of tutorialspoint to send the data 
+ i.e., only email address submitted to display on a page
+Time elasped for this task : 1 hour
