@@ -25,8 +25,15 @@ def register():
     if request.method == 'POST':
         data = request.form
         userdata = USERS(request.form['email'],request.form['psw'])
+        user = USERS.query.filter_by(emailid=request.form['email']).first()
+        if user is not None:
+            print("User is already existing. Please try to register with a new")
+            var1 = "Error: User is already existing. Please try to register with a new one"
+            return render_template("reg.html", var1 = var1)
         db.session.add(userdata)
         db.session.commit()
-        return render_template("reg.html")
+        print("Registration Success")
+        var1 ='Registration Success'
+        return render_template("reg.html", var1 = var1)
     else:
         return render_template("reg.html")
