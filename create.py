@@ -37,3 +37,10 @@ def register():
         return render_template("reg.html", var1 = var1)
     else:
         return render_template("reg.html")
+    
+
+@app.route('/admin')
+def admin():
+    data = USERS.query.all()
+    print(data)
+    return render_template("admin.html",admin = data)
