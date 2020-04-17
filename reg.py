@@ -8,6 +8,7 @@ def hello_world():
 def hello():
     if request.method == 'POST':
       data = request.form
+      print("Email Id:"+data["email"])
       return render_template("registrationdata.html",registrationdata = data)
     else:
         return render_template("reg.html")
