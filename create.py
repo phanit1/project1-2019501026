@@ -5,7 +5,9 @@ from flask import Flask, session, redirect
 from flask_session import Session
 from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import scoped_session, sessionmaker
+import logging
 
+logging.basicConfig(level=logging.DEBUG)
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -44,3 +46,26 @@ def admin():
     data = USERS.query.order_by(desc(USERS.timestamp)).all()
     print(data)
     return render_template("admin.html",admin = data)
+
+@app.route('/auth', methods=['POST'])
+def login():
+    # print(request.form)
+    user = USERS.query.filter_by(emailid=request.form['email']).first()
+    if user is not None:
+        if bcrypt.verify(request.form['psw'], user.password):
+            return redirect('/home')
+        else:
+            var1 = "Wrong Credentials"
+            return render_template("reg.html", var1 = var1)
+    else:
+        print("You are not a registered user. Please first register to login")
+        var1 = "Error: You are not a registered user. Please first register to login"
+        return render_template("reg.html", var1 = var1)
+@app.route('/home')
+def home():
+        return render_template("login.html")
+    
+@app.route('/logout')
+def logout():
+        var1 = "Logged Out"
+        return render_template("reg.html", var1 = var1)
