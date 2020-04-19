@@ -49,10 +49,12 @@ def admin():
 
 @app.route('/auth', methods=['POST'])
 def login():
-    # print(request.form)
+    print(request.form)
     user = USERS.query.filter_by(emailid=request.form['email']).first()
     if user is not None:
         if bcrypt.verify(request.form['psw'], user.password):
+            session['email'] = request.form['email']
+            print(session)
             return redirect('/home')
         else:
             var1 = "Wrong Credentials"
@@ -63,9 +65,20 @@ def login():
         return render_template("reg.html", var1 = var1)
 @app.route('/home')
 def home():
+    try:
+        user=session['email']
         return render_template("login.html")
-    
+    except:
+        var1 = "You must log in to view the homepage"
+        return render_template("reg.html",var1 = var1)
+
 @app.route('/logout')
 def logout():
+    try:
+        user=session['email']
+        session.clear()
         var1 = "Logged Out"
         return render_template("reg.html", var1 = var1)
+    except:
+        var1 = "You must first log in to logout"
+        return render_template("reg.html",var1 = var1)
