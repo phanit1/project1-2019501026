@@ -3,7 +3,7 @@ from flask import Flask, request, render_template
 from models import *
 from flask import Flask, session, redirect
 from flask_session import Session
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 app = Flask(__name__)
@@ -41,6 +41,6 @@ def register():
 
 @app.route('/admin')
 def admin():
-    data = USERS.query.all()
+    data = USERS.query.order_by(desc(USERS.timestamp)).all()
     print(data)
     return render_template("admin.html",admin = data)
