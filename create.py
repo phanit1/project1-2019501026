@@ -75,7 +75,6 @@ def home():
 @app.route('/logout')
 def logout():
     try:
-        user=session['email']
         session.clear()
         var1 = "Logged Out"
         return render_template("reg.html", var1 = var1)
