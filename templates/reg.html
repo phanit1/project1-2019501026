@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<link rel = "stylesheet" href="{{ url_for('static',filename='reg.css') }}">
+</head>
+<body >
+<form action = "http://127.0.0.1:5000/register" method = "POST">
+  <div class="container" style = "text-align: center;">
+    <h1>Registration Form</h1>
+    <hr>
+    <label for="email"><b>Email</b></label><br>
+    <input type="text" name="email" required><br>
+    <label for="psw"><b>Password</b></label><br>
+    <input type="password" name="psw" required><br>
+    <label for="psw-repeat"><b>Repeat Password</b></label><br>
+    <input type="password" name="psw-repeat" required><br>
+    <hr>
+    <button type="submit" class="registerbtn"><b>Register</b></button>
+    <button type="submit" class="registerbtn" formaction = "/auth"><b>Login</b></button>
+  </div>
+</form>
+{% if var1 %}
+<div class = "container" style="text-align: center;">
+<div class="alert alert-success alert-dismissible">
+  <a class="close" data-dismiss="alert" aria-label="close">&times;</a>
+{{var1}}
+</div>
+</div>
+{%endif%}
+</body>
+</html>
