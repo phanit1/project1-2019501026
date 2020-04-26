@@ -3,58 +3,58 @@
    <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+      <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
       <style>
-        img {
-          position:absolute;
-          left: 10%;
-          border-radius: 20px;
-          width: 130px;
+
+        h1{
+            text-align: left;
+            color:darkblue;
         }
-        table{
-          position: absolute;
-          left:22%;
-          
-          height: 200px;
+        .card {
+        margin: 0 auto;
+        float: none;
+        margin-bottom: 10px;
         }
+        .container {
+        width: 100px;
+        margin: 0 auto;
+        padding: 30px;
+        background: #f0e68c;
+        justify-content: center;
+        align-items: center;
+        }
+        
       </style>
    </head>
-
-
-   <body style="background-color:bisque;">
-    {% extends 'navbar.html' %}
-       <br><br><br>
+   <body style="background-color: lightcyan;"><br><br><br><br>
     <h1 style = "text-align:center">The Book Details Here!!!</h1><br>
-    <div class = "container">
-      {% for item in Book_details %}
-      <table style="width:20%">
-        
-        <img src = "http://covers.openlibrary.org/b/isbn/{{item.isbn}}.jpg" alt = {{item.title}}/> 
-        <tr>
-          <th>ISBN:</th>
-          <td>{{item.isbn}}</td>
-          
-        </tr>
-        <tr>
-          <th>TITLE:</th>
-          <td>{{item.title}}</td>
-        </tr>
-        <tr>
-          <th>AUTHOR:</th>
-          <td>{{item.author}}</td>
-        </tr>
-        <tr>
-          <th>YEAR:</th>
-          <td>{{item.year}}</td>
-        </tr>
-        {% endfor %}
-      </table>
-      
+    <div class="card container border-dark text-white mb-1" style="background-color:#f0e68c;">
+        <div class="row no-gutters">
+            <div class="col-md-4" >
+                {% for item in Book_details %}
+                <br><br><img src="http://covers.openlibrary.org/b/isbn/{{item.isbn}}.jpg" alt="{{item.title}}" style="width: 200px; height: 200px;">
+            </div>
+            <div class="col-md-8" >
+                <br>
+                <div class="card-body ">
+                    <div class="card" style="width: 18rem;">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item bg-secondary">Title:{{item.title}}</li>
+                            <li class="list-group-item bg-secondary">ISBN: {{item.isbn}}</li>
+                            <li class="list-group-item bg-secondary">Author: {{item.author}}</li>
+                            <li class="list-group-item bg-secondary">Year: {{item.year}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+          {% endfor %}
+        </div>
     </div>
-   
-
+</div>
    </body>
 </html>
