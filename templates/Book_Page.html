@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+      <style>
+        img {
+          position:absolute;
+          left: 10%;
+          border-radius: 20px;
+          width: 130px;
+        }
+        table{
+          position: absolute;
+          left:22%;
+          
+          height: 200px;
+        }
+      </style>
+   </head>
+
+
+   <body style="background-color:bisque;">
+    {% extends 'navbar.html' %}
+       <br><br><br>
+    <h1 style = "text-align:center">The Book Details Here!!!</h1><br>
+    <div class = "container">
+      {% for item in Book_details %}
+      <table style="width:20%">
+        
+        <img src = "http://covers.openlibrary.org/b/isbn/{{item.isbn}}.jpg" alt = {{item.title}}/> 
+        <tr>
+          <th>ISBN:</th>
+          <td>{{item.isbn}}</td>
+          
+        </tr>
+        <tr>
+          <th>TITLE:</th>
+          <td>{{item.title}}</td>
+        </tr>
+        <tr>
+          <th>AUTHOR:</th>
+          <td>{{item.author}}</td>
+        </tr>
+        <tr>
+          <th>YEAR:</th>
+          <td>{{item.year}}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      
+    </div>
+   
+
+   </body>
+</html>
