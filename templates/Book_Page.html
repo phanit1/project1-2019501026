@@ -84,9 +84,12 @@
 
      </style>
 <body>
-    <div class="smart-wrap">           
+    <div class="smart-wrap">         
+        <p>
+            This book belongs to {{Book_details.title}}
+        </p>  
         <h1><i class="comments"></i> Review </h1>
-            <form method = "POST" action= "{{url_for('books', id = 12345)}}">
+            <form method = "POST" action= "{{url_for('books', id = Book_details.isbn)}}">
                 <div class="section">
                     <label class="field prepend-icon">
                         <input type="text" name="names" id="names" class="gui-input" placeholder="Enter name...">

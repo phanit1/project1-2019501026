@@ -1,6 +1,7 @@
 import os
 from flask import Flask, request, render_template,url_for,flash
 from models import *
+from booksdb import *
 from flask import Flask, session, redirect
 from flask_session import Session
 from sqlalchemy import create_engine, desc
@@ -87,7 +88,7 @@ def logout():
 @app.route('/books/<id>',methods=['POST','GET'])
 def books(id):
     print(id)
-    result = db.session.query(Books).filter(Books.isbn == id)
+    result = db.session.query(Books).filter(Books.isbn == id).first()
     print(result)
     data=Review.query.all()
     r=Review.query.filter_by(isbn=id).all()
@@ -108,6 +109,10 @@ def books(id):
         # url="/review/"+str(id)
         
         return redirect(url_for('books', id = id))
+
+    else:   
+        return render_template("Book_Page.html", Book_details=result,comments=r, allreviewdata = data )
+
 
 # @app.route('/review/<id>', methods=['POST','GET'])
 # def review(id):
