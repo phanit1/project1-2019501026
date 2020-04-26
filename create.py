@@ -1,10 +1,13 @@
 import os
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template,url_for,flash
 from models import *
 from flask import Flask, session, redirect
 from flask_session import Session
 from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import scoped_session, sessionmaker
+from Review import *
+
+
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
@@ -81,3 +84,33 @@ def logout():
     except:
         var1 = "You must first log in to logout"
         return render_template("reg.html",var1 = var1)
+
+@app.route('/review/<id>', methods=['POST','GET'])
+def review(id):
+
+    data=Review.query.all()
+    r=Review.query.filter_by(isbn=id).all()
+    print(r)
+  
+    if request.method=='POST':
+        reviewdata=Review(request.form['names'],id,request.form['email'],request.form['comment'],request.form['rating'])
+        user = Review.query.filter_by(email=request.form['email']).first()
+        data=Review.query.all()
+
+        if user is not None:
+            print("User had already given rating.")
+            var1 = "Error: User had already given rating."
+            return render_template("review.html", var1 = var1,comments=r, allreviewdata = data )
+        db.session.add(reviewdata)
+        db.session.commit()
+        var1="Review submitted"
+        flash(var1)
+        
+        return redirect(url_for('review', id = 12345))
+    else:
+        return render_template("review.html",comments=r,allreviewdata = data)    
+
+
+
+
+ 
