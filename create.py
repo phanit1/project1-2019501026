@@ -87,7 +87,15 @@ def logout():
 
 @app.route('/books/<id>')
 def books(id):
-    result = db.session.query(Books).filter(Books.isbn == id)
-    print(result)
-    return render_template('Book_Page.html', Book_details=result,Book_details_1=result)
+    try:
+        user = session["email"]
+        result = db.session.query(Books).filter(Books.isbn == id)
+        print(result)
+        return render_template('Book_Page.html', Book_details=result,Book_details_1=result)
+    except Exception as e:
+        print(e)
+        var1 = "You must log in to view the homepage"
+        return render_template("reg.html",var1 = var1)
+
+
 
