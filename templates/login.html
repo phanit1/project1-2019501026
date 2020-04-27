@@ -1,58 +1,33 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+{% extends 'generictemplate.html' %}
+
+{% block links %}
 <link rel="shortcut icon" href="{{url_for('static', filename='booksearch.jpg')}}" />
-<link rel="background img" href="{{url_for('static', filename='books.jpg')}}" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<link rel ="stylesheet" href = "{{url_for('static', filename='reg.css')}}" />
+{% endblock %}
+{% block styles %}
 <style>
-  * {
-      box-sizing: border-box;
-    }
-form.example input[type=text] {
-  padding: 10px;
-  font-size: 17px;
-  border: 1px solid grey;
-  float: left;
-  width: 80%;
-  background: #f1f1f1;
+  body {
+background-image: url('static/books.jpg'); 
+color: white; 
+background-size: cover; 
+background-repeat: no-repeat;
 }
-
-form.example button {
-  float: left;
-  width: 20%;
-  padding: 10px;
-  background: #2196F3;
-  color: white;
-  font-size: 17px;
-  border: 1px solid grey;
-  border-left: none;
-  cursor: pointer;
-}
-
-form.example button:hover {
-  background: #0b7dda;
-}
-
-form.example::after {
-  content: "";
-  clear: both;
-  display: table;
-}
-.tableFixHead {
-  overflow: auto;
-  height: 425px;
-}
-table,th,td {
-  border: 2px solid white;
-}
-
 </style>
-</head>
-<body style="background-image: url('static/books.jpg'); color: white; background-size: cover; background-repeat: no-repeat;">
+{% endblock %}
+{% block body %}
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top justify-content-between">
+  <a class="navbar-brand">Books</a>
+  <ul class="navbar-nav">
+    <li class = "navbar-brand">
+      {{ user }}
+    </li>
+    <li class="nav-item">
+      <form class="form-inline">
+        <button type="submit" formaction = "/logout">Logout</button>
+      </form>
+    </li>
+  </ul>
+</nav>
   <br>
   <br>
   <br>
@@ -101,6 +76,4 @@ table,th,td {
 </div>
 </div>
 {%endif%}
-{% extends 'navbar.html' %}
-</body>
-</html> 
+{% endblock %}
