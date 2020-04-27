@@ -89,7 +89,8 @@ def logout():
 def books(id):
     try:
         user = session["email"]
-        result = db.session.query(Books).filter(Books.isbn == id)
+        print("hi")
+        result = db.session.query(Books).filter(Books.isbn == id).all()
         print(result)
         return render_template('Book_Page.html', Book_details=result,Book_details_1=result)
     except Exception as e:
