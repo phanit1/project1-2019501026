@@ -27,7 +27,6 @@ def hello_world():
     return redirect('/registration')
 @app.route('/registration', methods = ['POST','GET'])
 def register():
-    db.create_all()
     if request.method == 'POST':
         userdata = USERS(request.form['email'],request.form['psw'])
         user = USERS.query.filter_by(emailid=request.form['email']).first()
@@ -92,3 +91,11 @@ def logout():
     except:
         var1 = "You must first log in to logout"
         return render_template("reg.html",var1 = var1)
+
+@app.route('/books/<id>')
+def books(id):
+    return "This book belongs to "+id
+
+if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
