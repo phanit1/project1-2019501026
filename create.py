@@ -87,57 +87,41 @@ def logout():
         return render_template("reg.html",var1 = var1)
 @app.route('/books/<id>',methods=['POST','GET'])
 def books(id):
-    print(id)
-    result = db.session.query(Books).filter(Books.isbn == id).first()
-    print(result)
-    data=Review.query.all()
-    r=Review.query.filter_by(isbn=id).all()
-    print(r)
-    if request.method=='POST':
-        reviewdata=Review(request.form['names'],id,request.form['email'],request.form['comment'],request.form['rating'])
-        user = Review.query.filter_by(email=request.form['email'],isbn=id).first()
+    try:
+        user = session["email"]
+        print(id)
+        result = db.session.query(Books).filter(Books.isbn == id).first()
+        print(result)
         data=Review.query.all()
-        print(user)
-        if user is not None:
-            print("User had already given rating.")
-            var1 = "Error: User had already given rating."
-            return render_template("Book_Page.html", Book_details=result,var1 = var1,comments=r, allreviewdata = data )
-        db.session.add(reviewdata)
-        db.session.commit()
-        var1="Review submitted"
-        flash(var1)
-        # url="/review/"+str(id)
-        
-        return redirect(url_for('books', id = id))
+        r=Review.query.filter_by(isbn=id).all()
+        print(r)
+        if request.method=='POST':
+            reviewdata=Review(request.form['names'],id,request.form['email'],request.form['comment'],request.form['rating'])
+            user = Review.query.filter_by(email=request.form['email'],isbn=id).first()
+            data=Review.query.all()
+            print(user)
+            if user is not None:
+                print("User had already given rating.")
+                var1 = "Error: User had already given rating."
+                return render_template("Book_Page.html", Book_details=result,var1 = var1,comments=r, allreviewdata = data )
+            db.session.add(reviewdata)
+            db.session.commit()
+            var1="Review submitted"
+            flash(var1)
+            
+            return redirect(url_for('books', id = id))
 
-    else:   
-        return render_template("Book_Page.html", Book_details=result,comments=r, allreviewdata = data )
-
-
-# @app.route('/review/<id>', methods=['POST','GET'])
-# def review(id):
-
-#     data=Review.query.all()
-#     r=Review.query.filter_by(isbn=id).all()
-#     print(r)
+        else:   
+            return render_template("Book_Page.html", Book_details=result,comments=r, allreviewdata = data )
   
-#     if request.method=='POST':
-#         reviewdata=Review(request.form['names'],id,request.form['email'],request.form['comment'],request.form['rating'])
-#         user = Review.query.filter_by(email=request.form['email']).first()
-#         data=Review.query.all()
+    except Exception as e:
+        print(e)
+        var1 = "You must log in to view the homepage"
+        return render_template("reg.html",var1 = var1)
+       
 
-#         if user is not None:
-#             print("User had already given rating.")
-#             var1 = "Error: User had already given rating."
-#             return render_template("review.html", var1 = var1,comments=r, allreviewdata = data )
-#         db.session.add(reviewdata)
-#         db.session.commit()
-#         var1="Review submitted"
-#         flash(var1)
-        
-#         return redirect(url_for('review', id = 12345))
-#     else:
-#         return render_template("review.html",comments=r,allreviewdata = data)    
+
+    
 
 
 
