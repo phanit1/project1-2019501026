@@ -1,0 +1,15 @@
+img {
+  position:absolute;
+  left: 10%;
+  border-radius: 20px;
+  width: 130px;
+}
+table{
+  position: absolute;
+  left:22%;
+  
+  height: 200px;
+}
+body{
+    background-color: bisque;
+}

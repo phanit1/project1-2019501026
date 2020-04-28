@@ -1,32 +1,14 @@
-<!doctype html>
-<html>
-   <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-      <style>
-        img {
-          position:absolute;
-          left: 10%;
-          border-radius: 20px;
-          width: 130px;
-        }
-        table{
-          position: absolute;
-          left:22%;
-          
-          height: 200px;
-        }
-      </style>
-   </head>
+{% extends 'generictemplate.html' %}
+{% block links %}
+<link rel ="stylesheet" href = "{{url_for('static', filename='book_page.css')}}" />
+{% endblock %}
+{% block title %}
+<title>Book_Page</title>
+{% endblock %} 
 
-
-   <body style="background-color:bisque;">
+{% block body %}
     
-       <br><br><br>
+    <br><br><br>
     <h1 style = "text-align:center">The Book Details Here!!!</h1><br>
     <div class = "container">
       {% for item in Book_details %}
@@ -54,7 +36,5 @@
       </table>
       
     </div>
-   
+{% endblock %}
 
-   </body>
-</html>
