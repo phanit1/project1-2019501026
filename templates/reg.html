@@ -2,6 +2,7 @@
 {% block links %}
 <link rel="shortcut icon" href="{{url_for('static', filename='reg.png')}}" />
 {% endblock %}
+
 {% block scripts %}
 <script type="text/javascript">
   function checkPassword(str)
@@ -56,6 +57,7 @@
   }
  </script>
  {%endblock%}
+
 {% block styles %}
 <style>
   body{
@@ -68,7 +70,9 @@
 </style>
 {% endblock %}
 {% block body %}
+
 <form action="/register" method = "POST" onsubmit="return checkForm(this);">
+
   <div class="container" style = "text-align: center;">
     <br>
     <br><br>
@@ -80,6 +84,7 @@
         <label for="email"><h2>Email</h2></label>
 
         <input class="form-control" type = "text" name = "email">
+
       </div>
    </div><br>
    <div class ="row justify-content-center">
@@ -91,6 +96,7 @@
  </div><br>
       <div class = "row justify-content-center">
       <div class="col-lg-4">
+
         <label for="pswrepeat"><h2>Confirm Password</h2></label>
         <input class="form-control" type="password" name ="pswrepeat">
       </div>
@@ -98,6 +104,7 @@
     <hr>
     <br>
     <button type="submit" class="btn btn-success btn-lg"><b>Register</b></button>
+
     <button type="submit" class="btn btn-success btn-lg" formaction = "/auth"><b>Login</b></button>
   </div>
   <h2 style="text-align: center; color: black;" id = "textdisplay"></h2>
