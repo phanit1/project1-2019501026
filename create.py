@@ -7,6 +7,8 @@ from flask import Flask, session, redirect
 from flask_session import Session
 from sqlalchemy import create_engine, desc , or_
 from sqlalchemy.orm import scoped_session, sessionmaker
+from booksdb import *
+# import passlib
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
@@ -92,10 +94,19 @@ def logout():
         var1 = "You must first log in to logout"
         return render_template("reg.html",var1 = var1)
 
+
+
 @app.route('/books/<id>')
 def books(id):
-    return "This book belongs to "+id
+    try:
+        user = session["email"]
+        result = db.session.query(Books).filter(Books.isbn == id).all()     
+        return render_template('Book_Page.html', Book_details=result,Book_details_1=result)
+    except Exception as e:
+        var1 = "You must log in to view the homepage"
+        return render_template("reg.html",var1 = var1)
 
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
+

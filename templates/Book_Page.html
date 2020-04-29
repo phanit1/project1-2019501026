@@ -1,0 +1,40 @@
+{% extends 'generictemplate.html' %}
+{% block links %}
+<link rel ="stylesheet" href = "{{url_for('static', filename='book_page.css')}}" />
+{% endblock %}
+{% block title %}
+<title>Book_Page</title>
+{% endblock %} 
+
+{% block body %}
+    
+    <br><br><br>
+    <h1 style = "text-align:center">The Book Details Here!!!</h1><br>
+    <div class = "container">
+      {% for item in Book_details %}
+      <table style="width:20%">
+        
+        <img src = "http://covers.openlibrary.org/b/isbn/{{item.isbn}}.jpg" alt = {{item.title}}/> 
+        <tr>
+          <th>ISBN:</th>
+          <td>{{item.isbn}}</td>
+          
+        </tr>
+        <tr>
+          <th>TITLE:</th>
+          <td>{{item.title}}</td>
+        </tr>
+        <tr>
+          <th>AUTHOR:</th>
+          <td>{{item.author}}</td>
+        </tr>
+        <tr>
+          <th>YEAR:</th>
+          <td>{{item.year}}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      
+    </div>
+{% endblock %}
+
