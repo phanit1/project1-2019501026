@@ -27,8 +27,8 @@
       else if(!ValidateEmail(form.email.value)) {
         document.getElementById("textdisplay").innerHTML="You have entered an invalid email address!";
         return false;
-      }
-      if(form.psw.value != "") {
+      } else {
+        if(form.psw.value != "") {
           if(form.pswrepeat.value != "") {
               if(form.psw.value == form.pswrepeat.value) {
                   if(!checkPassword(form.psw.value)) {
@@ -50,11 +50,12 @@
           document.getElementById("textdisplay").innerHTML="Error: Password cannot be blank!";
           return false;
       }
-      document.getElementById("textdisplay").innerHTML="Registration Success";
+      }
+      
       return true;
   }
  </script>
- {% endblock %}
+ {%endblock%}
 {% block styles %}
 <style>
   body{
@@ -67,7 +68,7 @@
 </style>
 {% endblock %}
 {% block body %}
-<form action="/test" method = "POST" onsubmit="return checkForm(this);">
+<form action="/register" method = "POST" onsubmit="return checkForm(this);">
   <div class="container" style = "text-align: center;">
     <br>
     <br><br>
@@ -95,9 +96,16 @@
     <hr>
     <br>
     <button type="submit" class="btn btn-success btn-lg"><b>Register</b></button>
-    <button type="submit" class="btn btn-success btn-lg" formaction = "/test"><b>Login</b></button>
+    <button type="submit" class="btn btn-success btn-lg" formaction = "/auth"><b>Login</b></button>
   </div>
   <h2 style="text-align: center; color: black;" id = "textdisplay"></h2>
 </form>
-
+{% if var1 %}
+<div class = "container" style="text-align: center;">
+<div class="alert alert-success alert-dismissible">
+<a class="close" data-dismiss="alert" aria-label="close">&times;</a>
+{{var1}}
+</div>
+</div>
+{%endif%}
 {% endblock %}

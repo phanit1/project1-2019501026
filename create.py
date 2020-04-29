@@ -87,7 +87,7 @@ def logout():
     try:
         session.clear()
         var1 = "Logged Out"
-        return render_template("reg.html", var1 = var1)
+        return redirect('/register')
     except:
         var1 = "You must first log in to logout"
         return render_template("reg.html",var1 = var1)
@@ -95,10 +95,6 @@ def logout():
 @app.route('/books/<id>')
 def books(id):
     return "This book belongs to "+id
-
-@app.route('/test', methods = ['POST'])
-def test():
-    return request.form['email']
 
 if __name__ == "__main__":
     with app.app_context():
