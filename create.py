@@ -2,8 +2,8 @@ import os
 
 from flask import Flask, request, render_template,url_for,flash
 from models import *
-from booksdb import *
-
+from booksdb import Books
+from books import *
 from flask import Flask, session, redirect
 from flask_session import Session
 from sqlalchemy import create_engine, desc , or_
@@ -113,7 +113,7 @@ def books(id):
             if user is not None:
                 print("User had already given rating.")
                 var1 = "Error: User had already given rating."
-                return render_template("Book_Page.html", Book_details=result,var1 = var1,comments=r, allreviewdata = data )
+                return render_template("Book_Page.html", user = user,Book_details=result,var1 = var1,comments=r, allreviewdata = data )
             db.session.add(reviewdata)
             db.session.commit()
             var1="Review submitted"
@@ -122,7 +122,7 @@ def books(id):
             return redirect(url_for('books', id = id))
 
         else:   
-            return render_template("Book_Page.html", Book_details=result,comments=r, allreviewdata = data )
+            return render_template("Book_Page.html", user = user,Book_details=result,comments=r, allreviewdata = data )
   
     except Exception as e:
         print(e)

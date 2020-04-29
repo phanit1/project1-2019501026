@@ -9,42 +9,67 @@
 {% endblock %} 
 
 {% block body %}
-    
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top justify-content-between">
+    <a class="navbar-brand">Books</a>
+    <ul class="navbar-nav">
+      <li class = "navbar-brand">
+        {{ user }}
+      </li>
+      <li class="nav-item">
+        <form class="form-inline">
+          <button type="submit" formaction = "/logout">Logout</button>
+        </form>
+      </li>
+    </ul>
+  </nav>
     <br><br><br>
-    <h1 style = "text-align:center">The Book Details Here!!!</h1><br>
-    <div class = "container">
-      {% for item in Book_details %}
-      <table style="width:20%">
+    <h1 style = "text-align:center">The Book Details Here!!!</h1><br><br>
+    <div class = "container" align = "center">
+        <div class = "row">
+            <div class = "col-lg-4"><img  style = "margin-left:250px;" src = "http://covers.openlibrary.org/b/isbn/{{Book_details.isbn}}.jpg" alt = {{Book_details.title}}/></div>
+            <div class = "col-lg-4"><table  >
         
-        <img src = "http://covers.openlibrary.org/b/isbn/{{item.isbn}}.jpg" alt = {{item.title}}/> 
-        <tr>
-          <th>ISBN:</th>
-          <td>{{item.isbn}}</td>
-          
-        </tr>
-        <tr>
-          <th>TITLE:</th>
-          <td>{{item.title}}</td>
-        </tr>
-        <tr>
-          <th>AUTHOR:</th>
-          <td>{{item.author}}</td>
-        </tr>
-        <tr>
-          <th>YEAR:</th>
-          <td>{{item.year}}</td>
-        </tr>
-        {% endfor %}
-      </table>
+                 
+                <tr>
+                  <th>ISBN:</th>
+                  <td>{{Book_details.isbn}}</td>
+                  
+                </tr>
+                <tr>
+                  <th>TITLE:</th>
+                  <td>{{Book_details.title}}</td>
+                </tr>
+                <tr>
+                  <th>AUTHOR:</th>
+                  <td>{{Book_details.author}}</td>
+                </tr>
+                <tr>
+                  <th>YEAR:</th>
+                  <td>{{Book_details.year}}</td>
+                </tr>
+              </table></div>
+            <div class = "col-lg-4"></div>
+        </div>
+      
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+     
+      
+
         <div class="smart-wrap">         
-        <p>
-            This book belongs to {{Book_details.title}}
-        </p>  
-        <h1><i class="comments"></i> Review </h1>
+        <h1 style = "text-align: center;"><i class="comments"></i> Review </h1>
             <form method = "POST" action= "{{url_for('books', id = Book_details.isbn)}}">
                
                 <div class="stars">
-                    <h2>Rate this article</h2>
+                    <h2 style = "text-align: center;">Rate this article</h2>
                     <input class="star star-5" id="star-5" type="radio" name="rating" value="5"/>
                     <label class="star star-5" for="star-5"></label>
                 
@@ -60,7 +85,7 @@
                     <input class="star star-1" id="star-1" type="radio" name="rating"value="1"/>
                     <label class="star star-1" for="star-1"></label>
                 </div>
-                <div class="section">
+                <div class="section" align = center>
                     <label class="field prepend-icon">
                         <textarea class="gui-textarea" id="comment" name="comment" placeholder="Enter message..."></textarea>
                         <span class="field-icon"><i class="fa fa-comments"></i></span>
@@ -96,7 +121,7 @@
 
 <br>
 {% if comments %}
-<h2> Previous Comments</h2>
+<h2 style = "text-align: center;"> Previous Comments</h2>
 {% for item in comments%}
 <div class="tableScroll">
 <div class="card " style="width: 40rem; background-color: white;">
