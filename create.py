@@ -56,7 +56,7 @@ def login():
         if bcrypt.verify(request.form['psw'], user.password):
             session['email'] = request.form['email']
             print(session)
-            return redirect('/home')
+            return redirect('/search')
         else:
             var1 = "Wrong Credentials"
             return render_template("reg.html", var1 = var1)
@@ -64,8 +64,8 @@ def login():
         print("You are not a registered user. Please first register to login")
         var1 = "Error: You are not a registered user. Please first register to login"
         return render_template("reg.html", var1 = var1)
-@app.route('/home', methods=['POST','GET'])
-def home():
+@app.route('/search', methods=['POST','GET'])
+def search():
     try:
         user=session['email']
         if request.method == 'POST':
@@ -75,7 +75,7 @@ def home():
             if bookss.__len__()==0:
                 var1 = "No search found"
                 return render_template("login.html", var1 = var1, user = user)
-            return render_template("login.html",bookss = bookss,formaction = '/home', user = user)
+            return render_template("login.html",bookss = bookss,formaction = '/search', user = user)
         return render_template("login.html", user = user)
     except Exception as e:
         print(e)
@@ -95,6 +95,10 @@ def logout():
 @app.route('/books/<id>')
 def books(id):
     return "This book belongs to "+id
+
+@app.route('/test', methods = ['POST'])
+def test():
+    return request.form['email']
 
 if __name__ == "__main__":
     with app.app_context():
