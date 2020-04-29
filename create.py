@@ -21,13 +21,13 @@ engine = create_engine(os.getenv("DATABASE_URL"))
 
 Session(app)
 db.init_app(app)
-
 @app.route('/')
 def hello_world():
     return redirect('/register')
 @app.route('/register', methods = ['POST','GET'])
 def register():
     db.create_all()
+
     if request.method == 'POST':
         data = request.form
         userdata = USERS(request.form['email'],request.form['psw'])
@@ -55,6 +55,7 @@ def admin():
 def login():
     print(request.form)
     user = USERS.query.filter_by(emailid=request.form['email']).first()
+
     if user is not None:
         if bcrypt.verify(request.form['psw'], user.password):
             session['email'] = request.form['email']
@@ -71,6 +72,7 @@ def login():
 def home():
     try:
         user=session['email']
+        print(user)
         return render_template("login.html")
     except:
         var1 = "You must log in to view the homepage"
@@ -87,6 +89,8 @@ def logout():
         return render_template("reg.html",var1 = var1)
 @app.route('/books/<id>',methods=['POST','GET'])
 def books(id):
+    db.create_all()
+
     try:
         user = session["email"]
         print(id)
@@ -96,8 +100,8 @@ def books(id):
         r=Review.query.filter_by(isbn=id).all()
         print(r)
         if request.method=='POST':
-            reviewdata=Review(request.form['names'],id,request.form['email'],request.form['comment'],request.form['rating'])
-            user = Review.query.filter_by(email=request.form['email'],isbn=id).first()
+            reviewdata=Review(id,user,request.form['comment'],request.form['rating'])
+            user = Review.query.filter_by(email=user,isbn=id).first()
             data=Review.query.all()
             print(user)
             if user is not None:
