@@ -24,8 +24,8 @@ db.init_app(app)
 
 @app.route('/')
 def hello_world():
-    return redirect('/registration')
-@app.route('/registration', methods = ['POST','GET'])
+    return redirect('/register')
+@app.route('/register', methods = ['POST','GET'])
 def register():
     if request.method == 'POST':
         userdata = USERS(request.form['email'],request.form['psw'])
