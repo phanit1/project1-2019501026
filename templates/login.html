@@ -34,11 +34,11 @@ background-repeat: no-repeat;
   <h1 style = "text-align:center">Book Search</h1>
 <form class="example"  style="margin:auto;max-width:300px" action="/books" method = "POST">
   <input type="text" placeholder="Search.. ISBN, Title, Author" name="search">
-  <button type="submit" formaction="/home" id="#booksearch"><i class="fa fa-search"></i></button>
+  <button type="submit" formaction="/search" id="#booksearch"><i class="fa fa-search"></i></button>
 </form>
 <br>
 <br>
-{% if formaction == "/home" %}
+{% if formaction == "/search" %}
 <h1 id = "booksearch" style = "text-align:center">Book Search Results</h1><br>
 <div class = "container">
   <div class = "tableFixHead">
