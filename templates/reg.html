@@ -2,6 +2,60 @@
 {% block links %}
 <link rel="shortcut icon" href="{{url_for('static', filename='reg.png')}}" />
 {% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+  function checkPassword(str)
+  {
+  var validpwd = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+  return validpwd.test(str);
+  }
+  function ValidateEmail(mail) 
+  {
+  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail))
+    {
+      return true
+    }
+      return false
+  }
+  function checkForm(form)
+  {
+      console.log("Hello");
+      if(form.email.value == "") {
+          document.getElementById("textdisplay").innerHTML="Error: Username cannot be blank!";
+      return false;
+      }
+      else if(!ValidateEmail(form.email.value)) {
+        document.getElementById("textdisplay").innerHTML="You have entered an invalid email address!";
+        return false;
+      } else {
+        if(form.psw.value != "") {
+          if(form.pswrepeat.value != "") {
+              if(form.psw.value == form.pswrepeat.value) {
+                  if(!checkPassword(form.psw.value)) {
+                      document.getElementById("textdisplay").innerHTML="The password should have at least 6 characters, with at least one uppercase letter, one lowercase letter, one number and a symbol.";
+                  return false;
+                  }
+              }
+              else {
+                  document.getElementById("textdisplay").innerHTML="Error: Password and Confirm Password are not same";
+                  return false;
+              }
+          }
+          else {
+              document.getElementById("textdisplay").innerHTML="Error: Confirm Password cannot be blank!";
+              return false;
+          }
+      }
+      else {
+          document.getElementById("textdisplay").innerHTML="Error: Password cannot be blank!";
+          return false;
+      }
+      }
+      
+      return true;
+  }
+ </script>
+ {%endblock%}
 {% block styles %}
 <style>
   body{
@@ -14,7 +68,7 @@
 </style>
 {% endblock %}
 {% block body %}
-<form action = "/registration" method = "POST">
+<form action="/register" method = "POST" onsubmit="return checkForm(this);">
   <div class="container" style = "text-align: center;">
     <br>
     <br><br>
@@ -24,26 +78,29 @@
     <div class = "row justify-content-center" >
       <div class="col-lg-4">
         <label for="email"><h2>Email</h2></label>
-        <input class="form-control" type = "email" name = "email" required>
+
+        <input class="form-control" type = "text" name = "email">
       </div>
    </div><br>
    <div class ="row justify-content-center">
       <div class="col-lg-4">
         <label for="psw"><h2>Password</h2></label>
-        <input class="form-control" type="password" name = "psw" required>
+
+        <input class="form-control" type="password" name = "psw">
       </div>
  </div><br>
       <div class = "row justify-content-center">
       <div class="col-lg-4">
-        <label for="psw-repeat"><h2>Confirm Password</h2></label>
-        <input class="form-control" type="password" name ="psw-repeat" required>
+        <label for="pswrepeat"><h2>Confirm Password</h2></label>
+        <input class="form-control" type="password" name ="pswrepeat">
       </div>
     </div>
     <hr>
     <br>
     <button type="submit" class="btn btn-success btn-lg"><b>Register</b></button>
-    <button type="submit" class="btn btn-success btn-lg" formaction = "http://127.0.0.1:5000/auth"><b>Login</b></button>
+    <button type="submit" class="btn btn-success btn-lg" formaction = "/auth"><b>Login</b></button>
   </div>
+  <h2 style="text-align: center; color: black;" id = "textdisplay"></h2>
 </form>
 {% if var1 %}
 <div class = "container" style="text-align: center;">
