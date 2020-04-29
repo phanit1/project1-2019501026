@@ -1,10 +1,12 @@
 import os
+
 from flask import Flask, request, render_template,url_for,flash
 from models import *
 from booksdb import *
+
 from flask import Flask, session, redirect
 from flask_session import Session
-from sqlalchemy import create_engine, desc
+from sqlalchemy import create_engine, desc , or_
 from sqlalchemy.orm import scoped_session, sessionmaker
 from Review import *
 
@@ -12,11 +14,13 @@ from Review import *
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
+
 engine = create_engine(os.getenv("DATABASE_URL"))
 
 Session(app)
@@ -26,10 +30,8 @@ def hello_world():
     return redirect('/register')
 @app.route('/register', methods = ['POST','GET'])
 def register():
-    db.create_all()
 
     if request.method == 'POST':
-        data = request.form
         userdata = USERS(request.form['email'],request.form['psw'])
         user = USERS.query.filter_by(emailid=request.form['email']).first()
         if user is not None:
@@ -48,7 +50,6 @@ def register():
 @app.route('/admin')
 def admin():
     data = USERS.query.order_by(desc(USERS.timestamp)).all()
-    print(data)
     return render_template("admin.html",admin = data)
 
 @app.route('/auth', methods=['POST'])
@@ -60,7 +61,7 @@ def login():
         if bcrypt.verify(request.form['psw'], user.password):
             session['email'] = request.form['email']
             print(session)
-            return redirect('/home')
+            return redirect('/search')
         else:
             var1 = "Wrong Credentials"
             return render_template("reg.html", var1 = var1)
@@ -68,13 +69,22 @@ def login():
         print("You are not a registered user. Please first register to login")
         var1 = "Error: You are not a registered user. Please first register to login"
         return render_template("reg.html", var1 = var1)
-@app.route('/home')
-def home():
+@app.route('/search', methods=['POST','GET'])
+def search():
     try:
         user=session['email']
-        print(user)
-        return render_template("login.html")
-    except:
+
+        if request.method == 'POST':
+            req  = request.form['search']
+            reqs = str(req)
+            bookss = dbscope.query(Books.isbn, Books.title, Books.author, Books.year).filter(or_(Books.title.like("%"+reqs+"%"), Books.author.like("%"+reqs+"%"), Books.isbn.like("%"+reqs+"%"))).all()
+            if bookss.__len__()==0:
+                var1 = "No search found"
+                return render_template("login.html", var1 = var1, user = user)
+            return render_template("login.html",bookss = bookss,formaction = '/search', user = user)
+        return render_template("login.html", user = user)
+    except Exception as e:
+        print(e)
         var1 = "You must log in to view the homepage"
         return render_template("reg.html",var1 = var1)
 
@@ -83,27 +93,23 @@ def logout():
     try:
         session.clear()
         var1 = "Logged Out"
-        return render_template("reg.html", var1 = var1)
+        return redirect('/register')
     except:
         var1 = "You must first log in to logout"
         return render_template("reg.html",var1 = var1)
+
 @app.route('/books/<id>',methods=['POST','GET'])
 def books(id):
-    db.create_all()
 
     try:
         user = session["email"]
-        print(id)
         result = db.session.query(Books).filter(Books.isbn == id).first()
-        print(result)
         data=Review.query.all()
         r=Review.query.filter_by(isbn=id).all()
-        print(r)
         if request.method=='POST':
             reviewdata=Review(id,user,request.form['comment'],request.form['rating'])
             user = Review.query.filter_by(email=user,isbn=id).first()
             data=Review.query.all()
-            print(user)
             if user is not None:
                 print("User had already given rating.")
                 var1 = "Error: User had already given rating."
@@ -123,11 +129,8 @@ def books(id):
         var1 = "You must log in to view the homepage"
         return render_template("reg.html",var1 = var1)
        
+if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
 
 
-    
-
-
-
-
- 

@@ -28,7 +28,46 @@ background-repeat: no-repeat;
     </li>
   </ul>
 </nav>
-  <h1>Login succes</h1>
+  <br>
+  <br>
+  <br>
+  <h1 style = "text-align:center">Book Search</h1>
+<form class="example"  style="margin:auto;max-width:300px" action="/books" method = "POST">
+  <input type="text" placeholder="Search.. ISBN, Title, Author" name="search">
+  <button type="submit" formaction="/search" id="#booksearch"><i class="fa fa-search"></i></button>
+</form>
+<br>
+<br>
+{% if formaction == "/search" %}
+<h1 id = "booksearch" style = "text-align:center">Book Search Results</h1><br>
+<div class = "container">
+  <div class = "tableFixHead">
+    <table class="table" border = 1 align = "center" style = "background-color: pink; color: black;">
+      <thead class="thead-dark" style="color: white;">
+      <tr>
+      <th> {{ "Isbn" }}</th>
+      <th> {{ "Title" }}</th>
+      <th> {{ "Author" }}</th>
+      <th> {{ "Year" }}</th>
+      <th> {{ " Link to Book" }}</th>
+    </tr>
+  </thead>
+  <tbody>
+      {% for item in bookss %}
+        <tr>
+            <td>{{ item.isbn}} </td>
+            <td> {{ item.title }}</td>
+            <td> {{ item.author }}</td>
+            <td> {{ item.year }}</td>
+
+            <td><a href = "{{ url_for('books',id = item.isbn) }}"><b>View Book</b></a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+  </table>
+  </div>
+</div>
+{%endif%}
 {% if var1 %}
 <div class = "container" style="text-align: center;">
 <div class="alert alert-success alert-dismissible">
