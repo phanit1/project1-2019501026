@@ -15,53 +15,52 @@ background-repeat: no-repeat;
 </style>
 {% endblock %}
 {% block scripts%}
-<script type="text/javascript"> 
+<script type="text/javascript">
 
-  // Search Form
+function searchform() {
+  var bookload = "<br><br><h3 style = 'text-align:center'>Books are loading</h3>"
+  document.getElementById("searchresults").innerHTML=bookload;
 
- jQuery(document).ready(function ($) {
-   
-    $("#searchform").submit(function(e) {
+  var url = "/api/search";
+  console.log("hello");
+  var form = new FormData(document.getElementById("searchform"));
+  var text = form.get("search")
+  responseobj = {}
+  responseobj['query'] = text;
 
-    e.preventDefault();
+  var json = JSON.stringify(responseobj);
+  console.log(responseobj);
 
-    var url = "/api/search"
-    var formData = jQuery('#searchform').serializeArray();
-    responseobj = {}
-    for(var i = 0; i< formData.length; i++) {
-      responseobj['query'] = formData[i]["value"]
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url);
+  console.log("Phani");
+  xhr.setRequestHeader('Content-Type','application/json');
+  xhr.send(json);
+  xhr.onload = function () {
+  var data = JSON.parse(xhr.responseText);
+  if (xhr.status == "200") {
+    var htmltext = "<br><div class = 'container'> <div class = 'tableFixHead'>"+
+    "<table class='table' border = 1 align = 'center' style = 'background-color: pink; color: black;'>"+
+    "<thead class='thead-dark' style='color: white;'><tr><th> {{ 'Isbn' }}</th><th> {{ 'Title' }}</th><th> {{ 'Author' }}</th>"+
+    "<th> {{ 'Year' }}</th><th> {{ ' Link to Book' }}</th></tr></thead><tbody>";
+    for(var i = 0; i < data.length; i++) {
+      htmltext = htmltext + "<tr>" + "<td>"+data[i]["isbn"] +"</td>"+ "<td>" + data[i]["title"] +"</td>"+
+      "<td>" + data[i]["author"] +"</td>"+ "<td>" + data[i]["year"] +"</td><td><button onclick = 'bookdisplay(this)' id = "+
+      data[i]["isbn"] + ">View Book</button></td></tr>"
     }
-    $.ajax({
-          type: "POST",
-          url: url,
-          data: JSON.stringify(responseobj),
-          contentType: "application/json",
-          success: function(data)
-          {
-            var htmltext = "<br><div class = 'container'> <div class = 'tableFixHead'>"+
-            "<table class='table' border = 1 align = 'center' style = 'background-color: pink; color: black;'>"+
-            "<thead class='thead-dark' style='color: white;'><tr><th> {{ 'Isbn' }}</th><th> {{ 'Title' }}</th><th> {{ 'Author' }}</th>"+
-            "<th> {{ 'Year' }}</th><th> {{ ' Link to Book' }}</th></tr></thead><tbody>";
-            for(var i = 0; i < data.length; i++) {
-              htmltext = htmltext + "<tr>" + "<td>"+data[i]["isbn"] +"</td>"+ "<td>" + data[i]["title"] +"</td>"+
-              "<td>" + data[i]["author"] +"</td>"+ "<td>" + data[i]["year"] +"</td><td><button onclick = 'bookdisplay(this)' id = "+
-              data[i]["isbn"] + ">View Book</button></td></tr>"
-            }
-            htmltext = htmltext + " </tbody> </table> </div></div>"
-            $("#searchresults").html(htmltext);
-          },
-          error: function(xhr, status, errorThrown) {
-              if (xhr.status == 404) {
-                var errormessage = "<br><br><h3 style = 'text-align:center'>No Book Results found</h3>"
-              } else if (xhr.status == 500) {
-                var errormessage = "<br><br><h3 style = 'text-align:center'>Please Try again after some time</h3>"
-              }
-              $("#searchresults").html(errormessage);
-          }
-        });
-  });
-  });
-
+    htmltext = htmltext + " </tbody> </table> </div></div>"  
+    document.getElementById("searchresults").innerHTML=htmltext;
+  }
+  else {
+    if (xhr.status == 404) {
+      var errormessage = "<br><br><h3 style = 'text-align:center'>No Book Results found</h3>"
+    } else if (xhr.status == 500) {
+      var errormessage = "<br><br><h3 style = 'text-align:center'>Please Try again after some time</h3>"
+    }
+    document.getElementById("searchresults").innerHTML=errormessage;
+    }
+  }
+}
 </script>
 {% endblock %}
 {% block body %}
@@ -82,9 +81,9 @@ background-repeat: no-repeat;
   <br>
   <br>
   <h1 style = "text-align:center">Book Search</h1>
-<form class="example" id = "searchform" style="margin:auto;max-width:300px">
+<form class="example" id = "searchform" style="margin:auto;max-width:300px" onsubmit="event.preventDefault(); searchform()">
   <input type="text" placeholder="Search.. ISBN, Title, Author" name="search">
-  <button type="submit" id="#booksearch"><i class="fa fa-search"></i></button>
+  <button type="submit" ><i class="fa fa-search"></i></button>
 </form>
 <div id = "searchresults"></div>
 {% endblock %}
