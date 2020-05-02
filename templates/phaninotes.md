@@ -15,7 +15,7 @@ If users want to search for books, they can be able to search based on ISBN,titl
 For user convenience, I implemented not only complete search but also partial search.
 In this partial search feature, users will be able to search books based on some part of title, ISBN or author of the book.
 After searching is done, the matched search results of books will be displayed in a table.
-<!-- In that table, user will be able to select a specific book to see using View Book Link
+In that table, user will be able to select a specific book to see using View Book Link
 After clicking view book link, it will be redirected to bookpage. 
 In the bookpage, the selected specific book details will be dispalyed to users.
-Below those details, a user will be able to review the book and also previous reviews given by other users to that book will be displayed. -->
+Below those details, a user will be able to review the book and also previous reviews given by other users to that book will be displayed.
