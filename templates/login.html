@@ -20,20 +20,14 @@ background-repeat: no-repeat;
 function searchform() {
   var bookload = "<br><br><h3 style = 'text-align:center'>Books are loading</h3>"
   document.getElementById("searchresults").innerHTML=bookload;
-
   var url = "/api/search";
-  console.log("hello");
   var form = new FormData(document.getElementById("searchform"));
   var text = form.get("search")
   responseobj = {}
   responseobj['query'] = text;
-
   var json = JSON.stringify(responseobj);
-  console.log(responseobj);
-
   var xhr = new XMLHttpRequest();
   xhr.open("POST", url);
-  console.log("Phani");
   xhr.setRequestHeader('Content-Type','application/json');
   xhr.send(json);
   xhr.onload = function () {
