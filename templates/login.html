@@ -2,23 +2,70 @@
 
 {% block links %}
 <link rel="shortcut icon" href="{{url_for('static', filename='booksearch.jpg')}}" />
-<link rel ="stylesheet" href = "{{url_for('static', filename='reg.css')}}" />
+<link rel ="stylesheet" href = "{{url_for('static', filename='bookpage.css')}}" />
 {% endblock %}
 {% block styles %}
 <style>
-  body {
-background-image: url('static/books.jpg'); 
-color: white; 
-background-size: cover; 
-background-repeat: no-repeat;
-}
+    body {
+  /* background-image: url('static/books.jpg');  */
+  background-color:burlywood;
+  color: darkblue; 
+  background-size: cover; 
+  background-repeat: no-repeat;
+  }
+  
 </style>
 {% endblock %}
-{% block body %}
+{% block scripts %}
+<script type="text/javascript">
+function reviewform() {
+  // this line is commented because , I didnot have accesss to book page
+  // var isbn = document.getElementById("bookisbn").innerText;
+  var param = "1595543414";
+  var url = '/api/submitReview?isbn='+param;
+  var form = new FormData(document.getElementById("reviewform"));
+  
+  var comment = form.get("comment")
+  var rating = form.get("rating")
+  // console.log(text);
+  requestobj = {}
+  requestobj['rating'] = rating
+  requestobj['comment'] =comment
+  requestobj['email'] = document.getElementById("email").innerText.trim('↵ ')
+  console.log(requestobj)
+  
+  var json = JSON.stringify(requestobj);
+  var http = new XMLHttpRequest();
+  http.open("POST", url);
+  http.setRequestHeader('Content-Type','application/json');
+  http.send(json);
+  http.onload = function () {
+  var data = JSON.parse(http.responseText);
+  if (http.status == "200") {
+    var html = data;
+    document.getElementById("review").innerHTML=html;
+   
+  }
+  else {
+    if (http.status == 404) {
+      var errormessage = "<br><br><h3 style = 'text-align:center'>No Book Results found</h3>"
+    } else if (http.status == 500) {
+      var errormessage = "<br><br><h3 style = 'text-align:center'>Please Try again after some time</h3>"
+    }else if (http.status == 409) {
+      var errormessage = "<br><br><h3 style = 'text-align:center'>Error:user had already given rating</h3>"
+    }
+    document.getElementById("review").innerHTML=errormessage;
+  }
+}
+}
+</script>
+{% endblock %}
+
+{% block body %} 
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top justify-content-between">
   <a class="navbar-brand">Books</a>
   <ul class="navbar-nav">
-    <li class = "navbar-brand">
+    <li class = "navbar-brand" id = "email">
       {{ user }}
     </li>
     <li class="nav-item">
@@ -31,49 +78,40 @@ background-repeat: no-repeat;
   <br>
   <br>
   <br>
-  <h1 style = "text-align:center">Book Search</h1>
-<form class="example"  style="margin:auto;max-width:300px" action="/books" method = "POST">
-  <input type="text" placeholder="Search.. ISBN, Title, Author" name="search">
-  <button type="submit" formaction="/search" id="#booksearch"><i class="fa fa-search"></i></button>
-</form>
-<br>
-<br>
-{% if formaction == "/search" %}
-<h1 id = "booksearch" style = "text-align:center">Book Search Results</h1><br>
-<div class = "container">
-  <div class = "tableFixHead">
-    <table class="table" border = 1 align = "center" style = "background-color: pink; color: black;">
-      <thead class="thead-dark" style="color: white;">
-      <tr>
-      <th> {{ "Isbn" }}</th>
-      <th> {{ "Title" }}</th>
-      <th> {{ "Author" }}</th>
-      <th> {{ "Year" }}</th>
-      <th> {{ " Link to Book" }}</th>
-    </tr>
-  </thead>
-  <tbody>
-      {% for item in bookss %}
-        <tr>
-            <td>{{ item.isbn}} </td>
-            <td> {{ item.title }}</td>
-            <td> {{ item.author }}</td>
-            <td> {{ item.year }}</td>
+  <h1 style = "text-align:center">Review</h1>
 
-            <td><a href = "{{ url_for('books',id = item.isbn) }}"><b>View Book</b></a></td>
-        </tr>
-        {% endfor %}
-      </tbody>
-  </table>
+
+
+<form class="example" id = "reviewform" style="margin:auto;max-width:300px;" onsubmit="event.preventDefault(); reviewform()">
+  <div class="stars">
+    <h2 style = "text-align: center;">Rate this article</h2>
+
+    <input class="star star-5" id="star-5" type="radio" name="rating" value="5"/>
+    <label class="star star-5" for="star-5"></label>
+    
+    <input class="star star-4" id="star-4" type="radio" name="rating"value="4"/>
+    <label class="star star-4" for="star-4"></label>
+
+    <input class="star star-3" id="star-3" type="radio" name="rating"value="3"/>
+    <label class="star star-3" for="star-3"></label>
+
+    <input class="star star-2" id="star-2" type="radio" name="rating"value="2"/>
+    <label class="star star-2" for="star-2"></label>
+
+    <input class="star star-1" id="star-1" type="radio" name="rating"value="1"/>
+    <label class="star star-1" for="star-1"></label>    
   </div>
-</div>
-{%endif%}
-{% if var1 %}
-<div class = "container" style="text-align: center;">
-<div class="alert alert-success alert-dismissible">
-<a class="close" data-dismiss="alert" aria-label="close">&times;</a>
-{{var1}}
-</div>
-</div>
-{%endif%}
+  <div class="section" style = "text-align: center;">
+    <label class="field prepend-icon">
+        <textarea  class="gui-textarea" id="comment" name="comment" placeholder="Enter message..."></textarea>
+        <span class="field-icon"><i class="fa fa-comments"></i></span>
+    </label>
+  </div>
+
+  <div class="form-footer" style = "text-align: center;">
+    <button type="submit" class="button btn-blue">submit</button>
+  </div>
+</form>
+
+<div id = "review"></div>
 {% endblock %}
