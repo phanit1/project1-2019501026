@@ -1,61 +1,61 @@
+ 
+    h1{
+        text-align: left;
+        color:darkmagenta;
+    }
+    h2{
+        text-align: left;
+        color:darkmagenta;
+        font-size: large;
+    }
 
-h1{
-    text-align: left;
-    color:darkblue;
-}
-h2{
-    text-align: left;
-    color:red;
-    font-size: large;
-}
+    .fa  {
+        color: darkmagenta;
+    }
 
-.fa  {
-    color: firebrick ;
-}
+    div.stars {
+        width: 240px;
+        display: inline-block;
+    }
 
-div.stars {
-    width: 240px;
-    display: inline-block;
-}
+    input.star { 
+        display: none; 
+    }
 
-input.star { 
-    display: none; 
-}
+    label.star {
+        float: right;
+        padding: 10px;
+        font-size: 20px;
+        font-variant-position: normal;
+        color:darkmagenta;
+        transition: all .2s;
+    }
 
-label.star {
-    float: right;
-    padding: 10px;
-    font-size: 20px;
-    font-variant-position: normal;
-    color: #444;
-    transition: all .2s;
-}
+    input.star:checked ~ label.star:before {
+        content: '\f005';
+        color: #FD4;
+        transition: all .25s;
+    }
 
-input.star:checked ~ label.star:before {
-    content: '\f005';
-    color: #FD4;
-    transition: all .25s;
-}
+    input.star-5:checked ~ label.star:before {
+        color: #FE7;
+        text-shadow: 0 0 20px #952;
+    }
 
-input.star-5:checked ~ label.star:before {
-    color: #FE7;
-    text-shadow: 0 0 20px #952;
-}
+    input.star-1:checked ~ label.star:before { 
+        color: #F62; 
+    }
 
-input.star-1:checked ~ label.star:before { 
-    color: #F62; 
-}
+    label.star:hover { 
+        transform: rotate(-15deg) scale(1.3); 
+    }
 
-label.star:hover { 
-    transform: rotate(-15deg) scale(1.3); 
-}
-
-label.star:before {
-    content: '\f006';
-    font-family: FontAwesome;
-}
-tableScroll {
-    overflow : scroll;
-    height: 100px;
-}
+    label.star:before {
+        content: '\f006';
+        font-family: FontAwesome;
+    }
+    tableScroll {
+        overflow : scroll;
+        height: 100px;
+    }
 
