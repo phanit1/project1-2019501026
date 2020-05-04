@@ -51,6 +51,9 @@ function searchform() {
     } else if (xhr.status == 500) {
       var errormessage = "<br><br><h3 style = 'text-align:center'>"+data+"</h3>"
     }
+    else if (xhr.status == 400) {
+      var errormessage = "<br><br><h3 style = 'text-align:center'>"+ data+"</h3>"
+    }
     document.getElementById("searchresults").innerHTML=errormessage;
     }
   }
