@@ -2,18 +2,60 @@
 
 {% block links %}
 <link rel="shortcut icon" href="{{url_for('static', filename='booksearch.jpg')}}" />
-<link rel ="stylesheet" href = "{{url_for('static', filename='reg.css')}}" />
+<link rel ="stylesheet" href = "{{url_for('static', filename='book_page.css')}}" />
 {% endblock %}
 {% block styles %}
-<style>
-  body {
-background-image: url('static/books.jpg'); 
-color: white; 
-background-size: cover; 
-background-repeat: no-repeat;
-}
+<style> 
 </style>
 {% endblock %}
+{% block scripts%}
+  <script type="text/javascript"> 
+  function bookdisplay(ele) {
+    console.log(ele.id)
+    var requestobj = {}
+    requestobj["isbn"] = ele.id
+    var url = "/api/book?isbn="+ele.id
+    // document.getElementById("id").innerHTML=requestobj.isbn;
+    var xhr  = new XMLHttpRequest()
+    xhr.open('GET', url, true)
+    xhr.onload = function () {
+	  var data = JSON.parse(xhr.responseText);
+    // console.log(users);
+	  if (xhr.readyState == 4 && xhr.status == "200") {
+		  // console.log("Success");
+      
+            var htmltext = "<br><h1 style = 'text-align:center'>The Book Details Here!!!</h1><br><br> <div class = 'container' align = 'center'>"+
+            "<div class = 'row'><div class = 'col-lg-4'><img  style = 'margin-left:250px;' src = 'http://covers.openlibrary.org/b/isbn/"+data.isbn+".jpg' alt = "+data.title+"/></div>"+
+            "<div class = 'col-lg-4'><table><tr><th>ISBN:</th><td>"+data.isbn+"</td></tr><tr><th>TITLE:</th>"+
+            "<td>"+data.title+"</td></tr><tr><th>AUTHOR:</th>"+
+            "<td>"+data.author+"</td></tr><tr><th>YEAR:</th>"+
+              "<td>"+data.year+"</td></tr></table></div><div class = 'col-lg-4'></div></div><br><br><br><br><br><br><br><br><br><h2 style = 'text-align:center'>Reviews</h2>";
+              
+
+            for(var i = 0; i < data.reviews.length; i++) {
+              // console.log(data[i]);
+              
+              htmltext = htmltext + "<li><p>" + data.reviews[i]["email"] + " ===> "+
+               data.reviews[i]["comment"] + " ===> "+data.reviews[i]["rating"] +"</p></li>"
+            }
+            htmltext = htmltext + "</ul>"
+            document.getElementById("reviewresults").innerHTML=htmltext;
+
+	  } else {
+		  // console.error("Fail");
+      if (xhr.status == 404) {
+                var errormessage = "<br><br><h3 style = 'text-align:center'>No Book</h3>"
+              } else if (xhr.status == 500) {
+                var errormessage = "<br><br><h3 style = 'text-align:center'>Please Try again after some time</h3>"
+              }
+              document.getElementById("reviewresults").innerHTML=errormessage;
+	  }
+  }
+xhr.send();
+}  
+   
+  </script>
+   {% endblock %}
 {% block body %}
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top justify-content-between">
   <a class="navbar-brand">Books</a>
@@ -31,49 +73,8 @@ background-repeat: no-repeat;
   <br>
   <br>
   <br>
-  <h1 style = "text-align:center">Book Search</h1>
-<form class="example"  style="margin:auto;max-width:300px" action="/books" method = "POST">
-  <input type="text" placeholder="Search.. ISBN, Title, Author" name="search">
-  <button type="submit" formaction="/search" id="#booksearch"><i class="fa fa-search"></i></button>
-</form>
-<br>
-<br>
-{% if formaction == "/search" %}
-<h1 id = "booksearch" style = "text-align:center">Book Search Results</h1><br>
-<div class = "container">
-  <div class = "tableFixHead">
-    <table class="table" border = 1 align = "center" style = "background-color: pink; color: black;">
-      <thead class="thead-dark" style="color: white;">
-      <tr>
-      <th> {{ "Isbn" }}</th>
-      <th> {{ "Title" }}</th>
-      <th> {{ "Author" }}</th>
-      <th> {{ "Year" }}</th>
-      <th> {{ " Link to Book" }}</th>
-    </tr>
-  </thead>
-  <tbody>
-      {% for item in bookss %}
-        <tr>
-            <td>{{ item.isbn}} </td>
-            <td> {{ item.title }}</td>
-            <td> {{ item.author }}</td>
-            <td> {{ item.year }}</td>
+  <button id = "1416949658" onclick = "bookdisplay(this)">View Book</button>
 
-            <td><a href = "{{ url_for('books',id = item.isbn) }}"><b>View Book</b></a></td>
-        </tr>
-        {% endfor %}
-      </tbody>
-  </table>
-  </div>
-</div>
-{%endif%}
-{% if var1 %}
-<div class = "container" style="text-align: center;">
-<div class="alert alert-success alert-dismissible">
-<a class="close" data-dismiss="alert" aria-label="close">&times;</a>
-{{var1}}
-</div>
-</div>
-{%endif%}
-{% endblock %}
+  <div id = "reviewresults"></div>
+
+  {% endblock %}

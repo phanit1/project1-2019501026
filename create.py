@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, request, render_template,url_for,flash
+from flask import Flask, request, render_template,url_for,flash,jsonify
 from models import *
 from booksdb import Books
 from books import *
@@ -128,7 +128,37 @@ def books(id):
         print(e)
         var1 = "You must log in to view the homepage"
         return render_template("reg.html",var1 = var1)
-       
+
+@app.route('/api/book')
+def apibook():
+    query = request.args.get('isbn')
+    print(query)
+    try:
+        result = db.session.query(Books).filter(Books.isbn == query).first()
+        r=Review.query.filter_by(isbn=query).all()
+    except:
+        message = "Please Try again Later"
+        return jsonify(message),500
+    print(result)
+    if result is None:
+        message = "No book found"
+        return jsonify(message), 404
+    response = {}
+    reviews = []
+    for review in r:
+        eachreview = {}
+        eachreview["email"] = review.email
+        eachreview["rating"] = review.rating
+        eachreview["comment"] = review.comment
+        reviews.append(eachreview)
+    response['isbn'] = result.isbn
+    response['title'] = result.title
+    response['author'] = result.author
+    response['year'] = result.year
+    response['reviews'] = reviews
+    return jsonify(response), 200 
+
+
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
