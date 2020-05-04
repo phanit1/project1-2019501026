@@ -24,21 +24,21 @@
 	  if (xhr.status == "200") {
 		  // console.log("Success");
       
-            var htmltext = "<br><h1 style = 'text-align:center'>The Book Details Here!!!</h1><br><br> <div class = 'container' align = 'center'>"+
-            "<div class = 'row'><div class = 'col-lg-4'><img  style = 'margin-left:250px;' src = 'http://covers.openlibrary.org/b/isbn/"+data.isbn+".jpg' alt = "+data.title+"/></div>"+
-            "<div class = 'col-lg-4'><table><tr><th>ISBN:</th><td>"+data.isbn+"</td></tr><tr><th>TITLE:</th>"+
-            "<td>"+data.title+"</td></tr><tr><th>AUTHOR:</th>"+
-            "<td>"+data.author+"</td></tr><tr><th>YEAR:</th>"+
-              "<td>"+data.year+"</td></tr></table></div><div class = 'col-lg-4'></div></div><br><br><br><br><br><br><br><br><br><h2 style = 'text-align:center'>Reviews</h2>";
+            var htmltext = "<br><h1 style = 'text-align:center'>The Book Details Here!!!</h1><br><br> <div class = 'container' style = 'color:white' align = 'center'>"+
+            "<div class = 'container' style = 'background-color: bisque'><div class = 'row' ><div class = 'col-lg-4'><img  style = 'margin-left:250px;' src = 'http://covers.openlibrary.org/b/isbn/"+data.isbn+".jpg' alt = "+data.title+"/></div>"+
+            "<div class = 'col-lg-4'><table><tr><th>ISBN:</th><td><b>"+data.isbn+"</b></td></tr><tr><th>TITLE:</th>"+
+            "<td><b>"+data.title+"</b></td></tr><tr><th>AUTHOR:</th>"+
+            "<td><b>"+data.author+"</b></td></tr><tr><th>YEAR:</th>"+
+              "<td><b>"+data.year+"</b></td></tr></table></div><div class = 'col-lg-4'></div></div></div><br><br><br><br><br><br><br><br><br><h2 style = 'text-align: center;'> Previous Comments</h2>";
               
 
             for(var i = 0; i < data.reviews.length; i++) {
-              // console.log(data[i]);
               
-              htmltext = htmltext + "<li><p>" + data.reviews[i]["email"] + " ===> "+
-               data.reviews[i]["comment"] + " ===> "+data.reviews[i]["rating"] +"</p></li>"
+                htmltext= htmltext + "<div><div class='card ' style='width: 40rem; background-color: bisque;'>"+
+                        "<div class='card-body'><h5 class='card-title' style = 'color:black'>Email:"+data.reviews[i]["email"]+"</h5><h6 class='card-subtitle mb-2 text-muted' style = 'color:black'>Rating: "+data.reviews[i]["rating"]+
+                        "</h6><p class='card-text' style = 'color:black'>Comment: "+data.reviews[i]["comment"]+"</p></div></div></div>"  
             }
-            htmltext = htmltext + "</ul>"
+            htmltext = htmltext 
             document.getElementById("reviewresults").innerHTML=htmltext;
 
 	  } else {
