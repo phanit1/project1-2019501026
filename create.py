@@ -189,8 +189,30 @@ def submitreview():
         message = "Please Try Again "
         return jsonify(message), 500
     # print(isbn,rating,comment)
-    message = "Review submitted successfully"
-    return jsonify(message), 200
+    try:
+        result = db.session.query(Books).filter(Books.isbn == isbn).first()
+        r=Review.query.filter_by(isbn=isbn).all()
+    except:
+        message = "Please Try again Later"
+        return jsonify(message),500
+    print(result)
+    if result is None:
+        message = "No book found"
+        return jsonify(message), 404
+    response = {}
+    reviews = []
+    for review in r:
+        eachreview = {}
+        eachreview["email"] = review.email
+        eachreview["rating"] = review.rating
+        eachreview["comment"] = review.comment
+        reviews.append(eachreview)
+    response['isbn'] = result.isbn
+    response['title'] = result.title
+    response['author'] = result.author
+    response['year'] = result.year
+    response['reviews'] = reviews
+    return jsonify(response), 200 
 
 @app.route('/api/search', methods = ["POST"])
 def apisearch():

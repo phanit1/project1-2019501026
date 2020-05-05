@@ -65,7 +65,7 @@ function bookdisplay(ele) {
 	  if (xhr.status == "200") {
             var htmltext = "<br><h1 style = 'text-align:center'>The Book Details Here!!!</h1><br><br> <div class = 'container' style = 'color:white' align = 'center'>"+
             "<div class = 'container' style = 'background-color: bisque'><div class = 'row' ><div class = 'col-lg-4'><img  style = 'margin-left:250px;' src = 'http://covers.openlibrary.org/b/isbn/"+data.isbn+".jpg' alt = "+data.title+"/></div>"+
-            "<div class = 'col-lg-4'><table style = '  position: absolute; left:22%; color:white;  height: 200px;'><tr><th>ISBN:</th><td><b>"+data.isbn+"</b></td></tr><tr><th>TITLE:</th>"+
+            "<div class = 'col-lg-4'><table style = '  position: absolute; left:22%; color:white;  height: 200px;'><tr><th>ISBN:</th><td><b><span id = 'bookisbn'>"+data.isbn+"</span></b></td></tr><tr><th>TITLE:</th>"+
             "<td><b>"+data.title+"</b></td></tr><tr><th>AUTHOR:</th>"+
             "<td><b>"+data.author+"</b></td></tr><tr><th>YEAR:</th>"+
               "<td><b>"+data.year+"</b></td></tr></table></div><div class = 'col-lg-4'></div></div></div><br><br><br><br><br><br><br><br><br><h2 style = 'text-align: center;'> Previous Comments</h2>";
@@ -79,7 +79,7 @@ function bookdisplay(ele) {
             }
             htmltext = htmltext 
             document.getElementById("reviewresults").innerHTML=htmltext;
-
+            document.getElementById("reviewcontainer").style.display = "block";
 	  } else {
 		  
       if (xhr.status == 404) {
@@ -114,8 +114,23 @@ function reviewform() {
   http.onload = function () {
   var data = JSON.parse(http.responseText);
   if (http.status == "200") {
-    var html = data;
-    document.getElementById("review").innerHTML=html;
+    var htmltext = "<br><h1 style = 'text-align:center'>The Book Details Here!!!</h1><br><br> <div class = 'container' style = 'color:white' align = 'center'>"+
+            "<div class = 'container' style = 'background-color: bisque'><div class = 'row' ><div class = 'col-lg-4'><img  style = 'margin-left:250px;' src = 'http://covers.openlibrary.org/b/isbn/"+data.isbn+".jpg' alt = "+data.title+"/></div>"+
+            "<div class = 'col-lg-4'><table style = '  position: absolute; left:22%; color:white;  height: 200px;'><tr><th>ISBN:</th><td><b><span id = 'bookisbn'>"+data.isbn+"</span></b></td></tr><tr><th>TITLE:</th>"+
+            "<td><b>"+data.title+"</b></td></tr><tr><th>AUTHOR:</th>"+
+            "<td><b>"+data.author+"</b></td></tr><tr><th>YEAR:</th>"+
+              "<td><b>"+data.year+"</b></td></tr></table></div><div class = 'col-lg-4'></div></div></div><br><br><br><br><br><br><br><br><br><h2 style = 'text-align: center;'> Previous Comments</h2>";
+              
+
+            for(var i = 0; i < data.reviews.length; i++) {
+              
+                htmltext= htmltext + "<div><div class='card ' style='width: 40rem; background-color: bisque;'>"+
+                        "<div class='card-body'><h5 class='card-title' style = 'color:black'>Email:"+data.reviews[i]["email"]+"</h5><h6 class='card-subtitle mb-2 text-muted' style = 'color:black'>Rating: "+data.reviews[i]["rating"]+
+                        "</h6><p class='card-text' style = 'color:black'>Comment: "+data.reviews[i]["comment"]+"</p></div></div></div>"  
+            }
+            htmltext = htmltext 
+            document.getElementById("reviewresults").innerHTML=htmltext;
+            document.getElementById("reviewcontainer").style.display = "block";
    
   }
   else {
@@ -128,6 +143,8 @@ function reviewform() {
     }
     document.getElementById("review").innerHTML=errormessage;
   }
+  document.getElementById("reviewform").reset();
+
 }
 }
 </script>
@@ -158,8 +175,8 @@ function reviewform() {
 </form>
 <div id = "searchresults"></div>
 <div id = "reviewresults"></div>
-<h1 style = "text-align:center">Review</h1>
-
+<div id = "reviewcontainer">
+  <h1 style = "text-align:center">Review</h1>
 <form class="example" id = "reviewform" style="margin:auto;max-width:300px;" onsubmit="event.preventDefault(); reviewform()">
   <div class="stars">
     <h2 style = "text-align: center;">Rate this article</h2>
@@ -187,9 +204,10 @@ function reviewform() {
   </div>
 
   <div class="form-footer" style = "text-align: center;">
-    <button type="submit" class="button btn-blue">submit</button>
+    <button type="submit" class="button btn-primary">Submit</button>
   </div>
 </form>
-
 <div id = "review"></div>
+</div>
+
 {% endblock %}
