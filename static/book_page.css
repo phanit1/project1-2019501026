@@ -4,12 +4,6 @@ img {
   border-radius: 20px;
   width: 130px;
 }
-table{
-  position: absolute;
-  left:22%;
-  color:white;
-  height: 200px;
-}
 body {
   background-image: url('books.jpg'); 
   background-size: cover; 

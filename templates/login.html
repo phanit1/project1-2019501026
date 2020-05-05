@@ -2,15 +2,58 @@
 
 {% block links %}
 <link rel="shortcut icon" href="{{url_for('static', filename='booksearch.jpg')}}" />
+<link rel ="stylesheet" href = "{{url_for('static', filename='reg.css')}}" />
+<link rel ="stylesheet" href = "{{url_for('static', filename='bookpage.css')}}" />
 <link rel ="stylesheet" href = "{{url_for('static', filename='book_page.css')}}" />
 {% endblock %}
 {% block styles %}
-<style> 
-</style>
+
 {% endblock %}
-{% block scripts%}
-  <script type="text/javascript"> 
-  function bookdisplay(ele) {
+{% block scripts %}
+<script type="text/javascript">
+  
+function searchform() {
+  var bookload = "<br><br><h3 style = 'text-align:center'>Books are loading......</h3>"
+  document.getElementById("searchresults").innerHTML=bookload;
+  var url = "/api/search";
+  var form = new FormData(document.getElementById("searchform"));
+  var text = form.get("search")
+  responseobj = {}
+  responseobj['query'] = text;
+  var json = JSON.stringify(responseobj);
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url);
+  xhr.setRequestHeader('Content-Type','application/json');
+  xhr.send(json);
+  xhr.onload = function () {
+  var data = JSON.parse(xhr.responseText);
+  if (xhr.status == "200") {
+    var htmltext = "<br><div class = 'container'> <div class = 'tableFixHead'>"+
+    "<table class='table' border = 1 align = 'center' style = 'background-color: pink; color: black;'>"+
+    "<thead class='thead-dark' style='color: white;'><tr><th> {{ 'Isbn' }}</th><th> {{ 'Title' }}</th><th> {{ 'Author' }}</th>"+
+    "<th> {{ 'Year' }}</th><th> {{ ' Link to Book' }}</th></tr></thead><tbody>";
+    for(var i = 0; i < data.length; i++) {
+      htmltext = htmltext + "<tr>" + "<td>"+data[i]["isbn"] +"</td>"+ "<td>" + data[i]["title"] +"</td>"+
+      "<td>" + data[i]["author"] +"</td>"+ "<td>" + data[i]["year"] +"</td><td><button onclick = 'bookdisplay(this)' id = "+
+      data[i]["isbn"] + ">View Book</button></td></tr>"
+    }
+    htmltext = htmltext + " </tbody> </table> </div></div>"  
+    document.getElementById("searchresults").innerHTML=htmltext;
+  }
+  else {
+    if (xhr.status == 404) {
+      var errormessage = "<br><br><h3 style = 'text-align:center'>"+ data+"</h3>"
+    } else if (xhr.status == 500) {
+      var errormessage = "<br><br><h3 style = 'text-align:center'>"+data+"</h3>"
+    }
+    else if (xhr.status == 400) {
+      var errormessage = "<br><br><h3 style = 'text-align:center'>"+ data+"</h3>"
+    }
+    document.getElementById("searchresults").innerHTML=errormessage;
+    }
+  }
+}
+function bookdisplay(ele) {
     console.log(ele.id)
     var requestobj = {}
     requestobj["isbn"] = ele.id
@@ -22,7 +65,7 @@
 	  if (xhr.status == "200") {
             var htmltext = "<br><h1 style = 'text-align:center'>The Book Details Here!!!</h1><br><br> <div class = 'container' style = 'color:white' align = 'center'>"+
             "<div class = 'container' style = 'background-color: bisque'><div class = 'row' ><div class = 'col-lg-4'><img  style = 'margin-left:250px;' src = 'http://covers.openlibrary.org/b/isbn/"+data.isbn+".jpg' alt = "+data.title+"/></div>"+
-            "<div class = 'col-lg-4'><table><tr><th>ISBN:</th><td><b>"+data.isbn+"</b></td></tr><tr><th>TITLE:</th>"+
+            "<div class = 'col-lg-4'><table style = '  position: absolute; left:22%; color:white;  height: 200px;'><tr><th>ISBN:</th><td><b>"+data.isbn+"</b></td></tr><tr><th>TITLE:</th>"+
             "<td><b>"+data.title+"</b></td></tr><tr><th>AUTHOR:</th>"+
             "<td><b>"+data.author+"</b></td></tr><tr><th>YEAR:</th>"+
               "<td><b>"+data.year+"</b></td></tr></table></div><div class = 'col-lg-4'></div></div></div><br><br><br><br><br><br><br><br><br><h2 style = 'text-align: center;'> Previous Comments</h2>";
@@ -49,14 +92,51 @@
   }
 xhr.send();
 }  
+
+function reviewform() {
+  var isbn = document.getElementById("bookisbn").innerText;
+  var url = '/api/submitReview?isbn='+isbn;
+  var form = new FormData(document.getElementById("reviewform"));
+  
+  var comment = form.get("comment")
+  var rating = form.get("rating")
+
+  requestobj = {}
+  requestobj['rating'] = rating
+  requestobj['comment'] =comment
+  requestobj['email'] = document.getElementById("email").innerText.trim('↵ ')
+  
+  var json = JSON.stringify(requestobj);
+  var http = new XMLHttpRequest();
+  http.open("POST", url);
+  http.setRequestHeader('Content-Type','application/json');
+  http.send(json);
+  http.onload = function () {
+  var data = JSON.parse(http.responseText);
+  if (http.status == "200") {
+    var html = data;
+    document.getElementById("review").innerHTML=html;
    
-  </script>
-   {% endblock %}
+  }
+  else {
+    if (http.status == 404) {
+      var errormessage = "<br><br><h3 style = 'text-align:center'>"+data+"</h3>"
+    } else if (http.status == 500) {
+      var errormessage = "<br><br><h3 style = 'text-align:center'>"+data+"</h3>"
+    }else if (http.status == 409) {
+      var errormessage = "<br><br><h3 style = 'text-align:center'>"+data+"</h3>"
+    }
+    document.getElementById("review").innerHTML=errormessage;
+  }
+}
+}
+</script>
+{% endblock %}
 {% block body %}
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top justify-content-between">
   <a class="navbar-brand">Books</a>
   <ul class="navbar-nav">
-    <li class = "navbar-brand">
+    <li class = "navbar-brand" id = "email">
       {{ user }}
     </li>
     <li class="nav-item">
@@ -69,8 +149,47 @@ xhr.send();
   <br>
   <br>
   <br>
-  <button id = "1416949658" onclick = "bookdisplay(this)">View Book</button>
 
-  <div id = "reviewresults"></div>
+ 
+  <h1 style = "text-align:center">Book Search</h1>
+<form class="example" id = "searchform" style="margin:auto;max-width:300px" onsubmit="event.preventDefault(); searchform()">
+  <input type="text" placeholder="Search.. ISBN, Title, Author" name="search">
+  <button type="submit" ><i class="fa fa-search"></i></button>
+</form>
+<div id = "searchresults"></div>
+<div id = "reviewresults"></div>
+<h1 style = "text-align:center">Review</h1>
 
-  {% endblock %}
+<form class="example" id = "reviewform" style="margin:auto;max-width:300px;" onsubmit="event.preventDefault(); reviewform()">
+  <div class="stars">
+    <h2 style = "text-align: center;">Rate this article</h2>
+
+    <input class="star star-5" id="star-5" type="radio" name="rating" value="5"/>
+    <label class="star star-5" for="star-5"></label>
+    
+    <input class="star star-4" id="star-4" type="radio" name="rating"value="4"/>
+    <label class="star star-4" for="star-4"></label>
+
+    <input class="star star-3" id="star-3" type="radio" name="rating"value="3"/>
+    <label class="star star-3" for="star-3"></label>
+
+    <input class="star star-2" id="star-2" type="radio" name="rating"value="2"/>
+    <label class="star star-2" for="star-2"></label>
+
+    <input class="star star-1" id="star-1" type="radio" name="rating"value="1"/>
+    <label class="star star-1" for="star-1"></label>    
+  </div>
+  <div class="section" style = "text-align: center;">
+    <label class="field prepend-icon">
+        <textarea  class="gui-textarea" id="comment" name="comment" placeholder="Enter message..."></textarea>
+        <span class="field-icon"><i class="fa fa-comments"></i></span>
+    </label>
+  </div>
+
+  <div class="form-footer" style = "text-align: center;">
+    <button type="submit" class="button btn-blue">submit</button>
+  </div>
+</form>
+
+<div id = "review"></div>
+{% endblock %}
