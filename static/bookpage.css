@@ -1,16 +1,26 @@
  
     h1{
         text-align: left;
-        color:darkmagenta;
+        color:cornsilk;
     }
     h2{
         text-align: left;
-        color:darkmagenta;
+        color:lawngreen;
         font-size: large;
     }
+   
+    body {
+        background-image: url('books.jpg'); 
+        /* background-color:burlywood; */
+        color: darkblue; 
+        background-size: cover; 
+        background-repeat: no-repeat;
+    }
+  
+
 
     .fa  {
-        color: darkmagenta;
+        color:maroon;
     }
 
     div.stars {
@@ -27,7 +37,7 @@
         padding: 10px;
         font-size: 20px;
         font-variant-position: normal;
-        color:darkmagenta;
+        color:lightgray;
         transition: all .2s;
     }
 
