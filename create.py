@@ -129,6 +129,39 @@ def books(id):
         var1 = "You must log in to view the homepage"
         return render_template("reg.html",var1 = var1)
 
+
+@app.route('/api/submitReview', methods  =['POST'])
+def submitreview():
+    if not request.is_json:
+        message = "Invalid request format"
+        return jsonify(message),400
+    isbn = request.args.get('isbn') 
+    try:
+        result = db.session.query(Books).filter(Books.isbn == isbn).first()
+    except:
+        message = "Please Try again Later"
+        return jsonify(message),500
+    if result is None:
+        message = "Please enter valid ISBN"
+        return jsonify(message), 404
+    rating = request.get_json()['rating']
+    comment = request.get_json()['comment']
+    email = request.get_json()['email']
+    user = Review.query.filter_by(email=email,isbn=isbn).first()
+    if user is not None:
+        message = "Sorry you can't review this book again"
+        return jsonify(message), 409
+    reviewdata=Review(isbn,email,comment,rating)
+    try:
+        db.session.add(reviewdata)
+        db.session.commit()
+    except:
+        message = "Please Try Again "
+        return jsonify(message), 500
+    # print(isbn,rating,comment)
+    message = "Review submitted successfully"
+    return jsonify(message), 200
+
 @app.route('/api/search', methods = ["POST"])
 def apisearch():
     if not request.is_json:
@@ -152,6 +185,7 @@ def apisearch():
         dictionary['year'] = book[3]
         response.append(dictionary)
     return jsonify(response) , 200
+
        
 if __name__ == "__main__":
     with app.app_context():
