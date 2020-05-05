@@ -15,15 +15,11 @@
     var requestobj = {}
     requestobj["isbn"] = ele.id
     var url = "/api/book?isbn="+ele.id
-    // document.getElementById("id").innerHTML=requestobj.isbn;
     var xhr  = new XMLHttpRequest()
     xhr.open('GET', url)
     xhr.onload = function () {
 	  var data = JSON.parse(xhr.responseText);
-    // console.log(users);
 	  if (xhr.status == "200") {
-		  // console.log("Success");
-      
             var htmltext = "<br><h1 style = 'text-align:center'>The Book Details Here!!!</h1><br><br> <div class = 'container' style = 'color:white' align = 'center'>"+
             "<div class = 'container' style = 'background-color: bisque'><div class = 'row' ><div class = 'col-lg-4'><img  style = 'margin-left:250px;' src = 'http://covers.openlibrary.org/b/isbn/"+data.isbn+".jpg' alt = "+data.title+"/></div>"+
             "<div class = 'col-lg-4'><table><tr><th>ISBN:</th><td><b>"+data.isbn+"</b></td></tr><tr><th>TITLE:</th>"+
@@ -42,7 +38,7 @@
             document.getElementById("reviewresults").innerHTML=htmltext;
 
 	  } else {
-		  // console.error("Fail");
+		  
       if (xhr.status == 404) {
                 var errormessage = "<br><br><h3 style = 'text-align:center'><b>"+data+"</b></h3>"
               } else if (xhr.status == 500) {
