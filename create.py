@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, request, render_template,url_for,flash,jsonify
+from flask import Flask, request, render_template,url_for,flash, jsonify
 from models import *
 from booksdb import Books
 from books import *
@@ -129,6 +129,7 @@ def books(id):
         var1 = "You must log in to view the homepage"
         return render_template("reg.html",var1 = var1)
 
+
 @app.route('/api/submitReview', methods  =['POST'])
 def submitreview():
     if not request.is_json:
@@ -160,6 +161,30 @@ def submitreview():
     # print(isbn,rating,comment)
     message = "Review submitted successfully"
     return jsonify(message), 200
+
+@app.route('/api/search', methods = ["POST"])
+def apisearch():
+    if not request.is_json:
+        message = "Invalid request format"
+        return jsonify(message),400
+    reqs = request.get_json()['query']
+    try:
+        bookss = dbscope.query(Books.isbn, Books.title, Books.author, Books.year).filter(or_(Books.title.like("%"+reqs+"%"), Books.author.like("%"+reqs+"%"), Books.isbn.like("%"+reqs+"%"))).all()
+    except:
+        message = "Please Try again Later"
+        return jsonify(message), 500
+    if bookss.__len__()==0:
+        message = "No search results found"
+        return jsonify(message),404
+    response = []
+    for book in bookss:
+        dictionary = {}
+        dictionary["isbn"] = book[0]
+        dictionary['title'] = book[1]
+        dictionary['author'] = book[2]
+        dictionary['year'] = book[3]
+        response.append(dictionary)
+    return jsonify(response) , 200
 
        
 if __name__ == "__main__":

@@ -3,12 +3,56 @@
 {% block links %}
 <link rel="shortcut icon" href="{{url_for('static', filename='booksearch.jpg')}}" />
 <link rel ="stylesheet" href = "{{url_for('static', filename='bookpage.css')}}" />
+<link rel ="stylesheet" href = "{{url_for('static', filename='reg.css')}}" />
 {% endblock %}
 {% block styles %}
 
 {% endblock %}
 {% block scripts %}
 <script type="text/javascript">
+  
+function searchform() {
+  var bookload = "<br><br><h3 style = 'text-align:center'>Books are loading......</h3>"
+  document.getElementById("searchresults").innerHTML=bookload;
+  var url = "/api/search";
+  var form = new FormData(document.getElementById("searchform"));
+  var text = form.get("search")
+  responseobj = {}
+  responseobj['query'] = text;
+  var json = JSON.stringify(responseobj);
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url);
+  xhr.setRequestHeader('Content-Type','application/json');
+  xhr.send(json);
+  xhr.onload = function () {
+  var data = JSON.parse(xhr.responseText);
+  if (xhr.status == "200") {
+    var htmltext = "<br><div class = 'container'> <div class = 'tableFixHead'>"+
+    "<table class='table' border = 1 align = 'center' style = 'background-color: pink; color: black;'>"+
+    "<thead class='thead-dark' style='color: white;'><tr><th> {{ 'Isbn' }}</th><th> {{ 'Title' }}</th><th> {{ 'Author' }}</th>"+
+    "<th> {{ 'Year' }}</th><th> {{ ' Link to Book' }}</th></tr></thead><tbody>";
+    for(var i = 0; i < data.length; i++) {
+      htmltext = htmltext + "<tr>" + "<td>"+data[i]["isbn"] +"</td>"+ "<td>" + data[i]["title"] +"</td>"+
+      "<td>" + data[i]["author"] +"</td>"+ "<td>" + data[i]["year"] +"</td><td><button onclick = 'bookdisplay(this)' id = "+
+      data[i]["isbn"] + ">View Book</button></td></tr>"
+    }
+    htmltext = htmltext + " </tbody> </table> </div></div>"  
+    document.getElementById("searchresults").innerHTML=htmltext;
+  }
+  else {
+    if (xhr.status == 404) {
+      var errormessage = "<br><br><h3 style = 'text-align:center'>"+ data+"</h3>"
+    } else if (xhr.status == 500) {
+      var errormessage = "<br><br><h3 style = 'text-align:center'>"+data+"</h3>"
+    }
+    else if (xhr.status == 400) {
+      var errormessage = "<br><br><h3 style = 'text-align:center'>"+ data+"</h3>"
+    }
+    document.getElementById("searchresults").innerHTML=errormessage;
+    }
+  }
+}
+  
 function reviewform() {
   // this line is commented because , I didnot have accesss to book page
   // var isbn = document.getElementById("bookisbn").innerText;
@@ -50,8 +94,7 @@ function reviewform() {
 }
 </script>
 {% endblock %}
-
-{% block body %} 
+{% block body %}
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top justify-content-between">
   <a class="navbar-brand">Books</a>
   <ul class="navbar-nav">
@@ -68,9 +111,14 @@ function reviewform() {
   <br>
   <br>
   <br>
-  <h1 style = "text-align:center">Review</h1>
+  <h1 style = "text-align:center">Book Search</h1>
+<form class="example" id = "searchform" style="margin:auto;max-width:300px" onsubmit="event.preventDefault(); searchform()">
+  <input type="text" placeholder="Search.. ISBN, Title, Author" name="search">
+  <button type="submit" ><i class="fa fa-search"></i></button>
+</form>
+<div id = "searchresults"></div>
 
-
+<h1 style = "text-align:center">Review</h1>
 
 <form class="example" id = "reviewform" style="margin:auto;max-width:300px;" onsubmit="event.preventDefault(); reviewform()">
   <div class="stars">
