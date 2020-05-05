@@ -8,6 +8,9 @@
         color:lawngreen;
         font-size: large;
     }
+    h3{
+        color:cornsilk;
+    }
    
     body {
         background-image: url('books.jpg'); 
