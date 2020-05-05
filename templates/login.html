@@ -12,18 +12,17 @@
 function reviewform() {
   // this line is commented because , I didnot have accesss to book page
   // var isbn = document.getElementById("bookisbn").innerText;
-  var param = "1595543414";
+  var param = "1234";
   var url = '/api/submitReview?isbn='+param;
   var form = new FormData(document.getElementById("reviewform"));
   
   var comment = form.get("comment")
   var rating = form.get("rating")
-  // console.log(text);
+
   requestobj = {}
   requestobj['rating'] = rating
   requestobj['comment'] =comment
   requestobj['email'] = document.getElementById("email").innerText.trim('↵ ')
-  console.log(requestobj)
   
   var json = JSON.stringify(requestobj);
   var http = new XMLHttpRequest();
@@ -39,11 +38,11 @@ function reviewform() {
   }
   else {
     if (http.status == 404) {
-      var errormessage = "<br><br><h3 style = 'text-align:center'>No Book Results found</h3>"
+      var errormessage = "<br><br><h3 style = 'text-align:center'>"+data+"</h3>"
     } else if (http.status == 500) {
-      var errormessage = "<br><br><h3 style = 'text-align:center'>Please Try again after some time</h3>"
+      var errormessage = "<br><br><h3 style = 'text-align:center'>"+data+"</h3>"
     }else if (http.status == 409) {
-      var errormessage = "<br><br><h3 style = 'text-align:center'>Error:user had already given rating</h3>"
+      var errormessage = "<br><br><h3 style = 'text-align:center'>"+data+"</h3>"
     }
     document.getElementById("review").innerHTML=errormessage;
   }
