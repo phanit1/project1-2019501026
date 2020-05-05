@@ -14,11 +14,57 @@ background-repeat: no-repeat;
 }
 </style>
 {% endblock %}
+{% block scripts%}
+<script type="text/javascript">
+
+function searchform() {
+  var bookload = "<br><br><h3 style = 'text-align:center'>Books are loading......</h3>"
+  document.getElementById("searchresults").innerHTML=bookload;
+  var url = "/api/search";
+  var form = new FormData(document.getElementById("searchform"));
+  var text = form.get("search")
+  responseobj = {}
+  responseobj['query'] = text;
+  var json = JSON.stringify(responseobj);
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url);
+  xhr.setRequestHeader('Content-Type','application/json');
+  xhr.send(json);
+  xhr.onload = function () {
+  var data = JSON.parse(xhr.responseText);
+  if (xhr.status == "200") {
+    var htmltext = "<br><div class = 'container'> <div class = 'tableFixHead'>"+
+    "<table class='table' border = 1 align = 'center' style = 'background-color: pink; color: black;'>"+
+    "<thead class='thead-dark' style='color: white;'><tr><th> {{ 'Isbn' }}</th><th> {{ 'Title' }}</th><th> {{ 'Author' }}</th>"+
+    "<th> {{ 'Year' }}</th><th> {{ ' Link to Book' }}</th></tr></thead><tbody>";
+    for(var i = 0; i < data.length; i++) {
+      htmltext = htmltext + "<tr>" + "<td>"+data[i]["isbn"] +"</td>"+ "<td>" + data[i]["title"] +"</td>"+
+      "<td>" + data[i]["author"] +"</td>"+ "<td>" + data[i]["year"] +"</td><td><button onclick = 'bookdisplay(this)' id = "+
+      data[i]["isbn"] + ">View Book</button></td></tr>"
+    }
+    htmltext = htmltext + " </tbody> </table> </div></div>"  
+    document.getElementById("searchresults").innerHTML=htmltext;
+  }
+  else {
+    if (xhr.status == 404) {
+      var errormessage = "<br><br><h3 style = 'text-align:center'>"+ data+"</h3>"
+    } else if (xhr.status == 500) {
+      var errormessage = "<br><br><h3 style = 'text-align:center'>"+data+"</h3>"
+    }
+    else if (xhr.status == 400) {
+      var errormessage = "<br><br><h3 style = 'text-align:center'>"+ data+"</h3>"
+    }
+    document.getElementById("searchresults").innerHTML=errormessage;
+    }
+  }
+}
+</script>
+{% endblock %}
 {% block body %}
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top justify-content-between">
   <a class="navbar-brand">Books</a>
   <ul class="navbar-nav">
-    <li class = "navbar-brand">
+    <li class = "navbar-brand" id = "email">
       {{ user }}
     </li>
     <li class="nav-item">
@@ -32,48 +78,9 @@ background-repeat: no-repeat;
   <br>
   <br>
   <h1 style = "text-align:center">Book Search</h1>
-<form class="example"  style="margin:auto;max-width:300px" action="/books" method = "POST">
+<form class="example" id = "searchform" style="margin:auto;max-width:300px" onsubmit="event.preventDefault(); searchform()">
   <input type="text" placeholder="Search.. ISBN, Title, Author" name="search">
-  <button type="submit" formaction="/search" id="#booksearch"><i class="fa fa-search"></i></button>
+  <button type="submit" ><i class="fa fa-search"></i></button>
 </form>
-<br>
-<br>
-{% if formaction == "/search" %}
-<h1 id = "booksearch" style = "text-align:center">Book Search Results</h1><br>
-<div class = "container">
-  <div class = "tableFixHead">
-    <table class="table" border = 1 align = "center" style = "background-color: pink; color: black;">
-      <thead class="thead-dark" style="color: white;">
-      <tr>
-      <th> {{ "Isbn" }}</th>
-      <th> {{ "Title" }}</th>
-      <th> {{ "Author" }}</th>
-      <th> {{ "Year" }}</th>
-      <th> {{ " Link to Book" }}</th>
-    </tr>
-  </thead>
-  <tbody>
-      {% for item in bookss %}
-        <tr>
-            <td>{{ item.isbn}} </td>
-            <td> {{ item.title }}</td>
-            <td> {{ item.author }}</td>
-            <td> {{ item.year }}</td>
-
-            <td><a href = "{{ url_for('books',id = item.isbn) }}"><b>View Book</b></a></td>
-        </tr>
-        {% endfor %}
-      </tbody>
-  </table>
-  </div>
-</div>
-{%endif%}
-{% if var1 %}
-<div class = "container" style="text-align: center;">
-<div class="alert alert-success alert-dismissible">
-<a class="close" data-dismiss="alert" aria-label="close">&times;</a>
-{{var1}}
-</div>
-</div>
-{%endif%}
+<div id = "searchresults"></div>
 {% endblock %}
